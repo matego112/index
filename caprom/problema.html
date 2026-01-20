@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Puterile numerelor</title>
+<style>
+body{ margin:0; font-family:Arial, sans-serif; background:#f5f5f0; }
+.container{ display:flex; flex-wrap: wrap; padding:10px; gap:10px; justify-content:center; }
+.card{ display:flex; flex-direction:row; align-items:center; justify-content:space-between; width:300px; height:120px; background:#fff; border:3px solid #CCAA77; border-radius:10px; padding:10px; font-size:28px; box-sizing:border-box; }
+.left{ font-size:32px; }
+.right input{ font-size:28px; width:80px; text-align:center; border-radius:6px; border:2px solid #999; padding:5px; }
+.correct{ background-color:#ccffcc; } /* verde */
+.wrong{ background-color:#ffcccc; }   /* rosu */
+.controls{ text-align:center; padding:10px; background:#f5f5f0; border-top:3px solid #CCAA77; margin-top:10px; }
+button{ background:#f5f5f0; color:#000066; padding:10px 18px; font-size:18px; border:none; border-radius:8px; cursor:pointer; margin:0 5px; }
+button:hover{ background:#FFFFCC; }
+</style>
+</head>
+<body>
+
+<div class="container" id="slideContainer"></div>
+
+<div class="controls">
+  <button onclick="resetSlides()">Resetare 🔄</button>
+  <button onclick="checkAnswers()">Corectare ✅</button>
+</div>
+
+<script>
+const container = document.getElementById('slideContainer');
+let slides = [];
+const NUM_CARDS = 10; // numărul de întrebări vizibile
+
+// Funcție care generează întrebări aleatorii
+function generateSlides(){
+  let newSlides = [];
+  while(newSlides.length < NUM_CARDS){
+    let base = Math.floor(Math.random()*6)+1; // 1-6
+    let exp = Math.floor(Math.random()*6);    // 0-5
+    let result = Math.pow(base, exp);
+    if(result <= 6){ 
+      // evită duplicatele
+      if(!newSlides.some(s => s.left === `${base}^${exp}`)){
+        newSlides.push({left:`${base}^${exp}`, right: result, userAnswer: ''});
+      }
+    }
+  }
+  return newSlides;
+}
+
+// Creează casetele în container
+function createCards(){
+  container.innerHTML=''; // șterge vechile casete
+  slides.forEach((s,i)=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<div class="left">${s.left}</div><div class="right"><input type="number" id="input${i}"></div>`;
+    container.appendChild(card);
+
+    const input = card.querySelector('input');
+    input.addEventListener('input', e => {
+      s.userAnswer = e.target.value;
+      input.classList.remove('correct','wrong');
+    });
+  });
+}
+
+// Resetare: generează întrebări noi
+function resetSlides(){
+  slides = generateSlides();
+  createCards();
+}
+
+// Corectare
+function checkAnswers(){
+  let correctCount = 0;
+  slides.forEach((s,i)=>{
+    const input = document.getElementById(`input${i}`);
+    if(Number(s.userAnswer) === s.right){
+      input.classList.add('correct');
+      input.classList.remove('wrong');
+      correctCount++;
+    } else {
+      input.classList.add('wrong');
+      input.classList.remove('correct');
+    }
+  });
+  alert(`Răspunsuri corecte: ${correctCount} / ${slides.length}`);
+}
+
+// Inițializare la încărcare
+resetSlides();
+</script>
+
+</body>
+</html>

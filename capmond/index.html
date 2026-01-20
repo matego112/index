@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Slideshow pagini + imagini</title>
+<style>
+  body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f5f5f0;
+  }
+  .container{
+    display:flex;
+    width:100%;
+    height:90vh;
+  }
+  .left, .right{
+    height:100%;
+  }
+  .left{
+    width:60%;
+    border-right:3px solid #CCAA77;
+  }
+  .right{
+    width:40%;
+  }
+  iframe{
+    width:100%;
+    height:100%;
+    border:none;
+  }
+  .controls{
+    text-align:center;
+    padding:10px;
+    background:#f5f5f0;
+    border-top:3px solid #CCAA77;
+  }
+  button{
+    background:#f5f5f0;
+    color:#000066;
+    padding:10px 18px;
+    font-size:18px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    margin:0 5px;
+  }
+  button:hover{
+    background:#FFFFCC;
+  }
+  button:disabled{
+    opacity:0.5;
+    cursor:not-allowed;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="left">
+    <iframe id="frameLeft" src="problema.html"></iframe>
+  </div>
+  <div class="right">
+    <iframe id="frameRight" src="poza0.html"></iframe>
+  </div>
+</div>
+<div class="controls">
+  <button id="btnPrev" onclick="prevSlide()">&laquo; Anterior</button>
+  <button id="btnNext" onclick="nextSlide()">Următorul &raquo;</button>
+</div>
+<script>
+  // LISTA SLIDE-URILOR
+  const slides = [
+    { left: "problema.html", right: "poza0.html"},
+    { left: "raspuns.html", right: "poza1.html" },
+    { left: "raspuns.html", right: "poza2.html" },
+    { left: "raspuns.html", right: "poza3.html" }
+  ];
+  
+  let index = 0;
+  
+  function updateButtons(){
+    document.getElementById("btnPrev").disabled = (index === 0);
+    document.getElementById("btnNext").disabled = (index === slides.length - 1);
+  }
+  
+  function nextSlide(){
+    if(index < slides.length - 1){
+      index++;
+      document.getElementById("frameLeft").src = slides[index].left;
+      document.getElementById("frameRight").src = slides[index].right;
+      updateButtons();
+    }
+  }
+  
+  function prevSlide(){
+    if(index > 0){
+      index--;
+      document.getElementById("frameLeft").src = slides[index].left;
+      document.getElementById("frameRight").src = slides[index].right;
+      updateButtons();
+    }
+  }
+  
+  // Inițializare
+  updateButtons();
+</script>
+</body>
+</html>
